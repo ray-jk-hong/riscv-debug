@@ -2,14 +2,14 @@
 /*
  * Copyright (C) 2026 Jk Hong <zaiguang.hong@riscv-computing.com>
  */
-#ifndef RVD_H
-#define RVD_H
+#ifndef URVD_H
+#define URVD_H
 
 #include <stdint.h>
+#include <sys/ioctl.h>
 
 #include <linux/types.h>
 
-struct rvd_cmd {
-};
+#define UKNUSED(x) (void)(x)
 
 #endif

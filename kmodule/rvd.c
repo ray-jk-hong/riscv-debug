@@ -21,7 +21,7 @@ static ssize_t rvd_write(struct file *file, const char __user *buf,
 	return count;
 }
 
-int rvd_open(struct inode *inode, struct file *file)
+static int rvd_open(struct inode *inode, struct file *file)
 {
 	return 0;
 }

@@ -5,11 +5,15 @@
 
 #include <stdio.h>
 
+#include "rvd.h"
 #include "urvd.h"
 
 int main(int argc, char *argv[])
 {
-    (void)argc;
-    (void)argv;
+    struct rvd_cmd cmd = {0};
+
+    UKNUSED(argc);
+    UKNUSED(argv);
+
     return 0;
 }
