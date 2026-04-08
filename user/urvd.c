@@ -2,7 +2,5 @@
 /*
  * Copyright (C) 2026 Jk Hong <zaiguang.hong@riscv-computing.com>
  */
-#ifndef RVD_H
-#define RVD_H
+#include "urvd.h"
 
-#endif

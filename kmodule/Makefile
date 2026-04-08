@@ -13,7 +13,7 @@
 
 obj-m += rvd.o
 
-KDIR ?= /Users/hong/study/codes/riscv-debug/kheaders
+KDIR ?= /Users/hong/study/codes/linux/linux
 PWD  := $(shell pwd)
 
 all:

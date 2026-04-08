@@ -2,20 +2,59 @@
 /*
  * Copyright (C) 2026 Jk Hong <zaiguang.hong@riscv-computing.com>
  */
+#include <linux/fs.h>
+#include <linux/miscdevice.h>
 #include <linux/module.h>
 #include <linux/printk.h>
 
 #include "rvd.h"
 
+static ssize_t rvd_read(struct file *file, char __user *buf,
+	size_t count, loff_t *ppos)
+{
+	return 0;
+}
+
+static ssize_t rvd_write(struct file *file, const char __user *buf,
+	size_t count, loff_t *ppos)
+{
+	return count;
+}
+
+int rvd_open(struct inode *inode, struct file *file)
+{
+	return 0;
+}
+
+static const struct file_operations rvd_fops = {
+	.owner = THIS_MODULE,
+	.open = rvd_open,
+	.read = rvd_read,
+	.write = rvd_write,
+	.llseek = noop_llseek,
+};
+
+static struct miscdevice rvd_miscdev = {
+	.minor = MISC_DYNAMIC_MINOR,
+	.name = "rvd",
+	.fops = &rvd_fops,
+	.mode = 0666,
+};
+
 static int __init rvd_mod_init(void)
 {
-    printk(KERN_INFO "RISC-V Debug Module Initialized\n");
-    return 0;
+	int ret;
+
+	ret = misc_register(&rvd_miscdev);
+	if (ret)
+		return ret;
+
+	return 0;
 }
 
 static void __exit rvd_mod_exit(void)
 {
-    printk(KERN_INFO "RISC-V Debug Module Exited\n");
+	misc_deregister(&rvd_miscdev);
 }
 
 module_init(rvd_mod_init);
