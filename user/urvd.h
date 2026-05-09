@@ -6,10 +6,10 @@
 #define URVD_H
 
 #include <stdint.h>
-#include <sys/ioctl.h>
 
 #include <linux/types.h>
 
-#define UKNUSED(x) (void)(x)
+#define UKNUSED(x) \
+    (void)(x)
 
 #endif

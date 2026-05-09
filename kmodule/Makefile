@@ -1,11 +1,7 @@
 # SPDX-License-Identifier: GPL-2.0
-# 本目录 out-of-tree 内核模块构建（默认 riscv64：ARCH=riscv + riscv-linux-gnu-）
 #
-#   make
-#   make clean
+# Copyright (C) 2026 Jk Hong <zaiguang.hong@riscv-computing.com>
 #
-# 指定内核树：make KDIR=/path/to/linux-source
-# 本机原生编译模块（不推荐与本仓库 riscv 用户态混用）：make ARCH= CROSS_COMPILE=
 
 obj-m += rvd.o
 

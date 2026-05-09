@@ -17,6 +17,7 @@
 
 struct rvd_cmd {
     u32 cmd;
+    u32 subcmd;
     u32 arg;
     void *data;
 };
