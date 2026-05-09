@@ -8,14 +8,19 @@ CC            := $(CROSS_COMPILE)gcc
 CFLAGS        := -Wall -Wextra -O2 -g -march=rv64gc -mabi=lp64d
 LDFLAGS       ?=
 
-TARGET  := rvd
-SRCS    := $(wildcard *.c)
-OBJS    := $(SRCS:.c=.o)
+TARGET   := rvd
+LIB_SO   := librvd.so
+SONAME   := librvd.so
+
+MAIN_SRC := main.c
+MAIN_OBJ := main.o
+
+LIB_SRC  := urvd.c
+LIB_PIC  := urvd.pic.o
 
 KDIR        ?= /Users/hong/study/codes/linux/linux
 HDR_INSTALL ?=
 
-# 内核 arch/ 目录名（本工程固定为 riscv；需要时可 make KERNEL_ARCH=arm64 等覆盖）
 KERNEL_ARCH ?= riscv
 
 ifneq ($(strip $(HDR_INSTALL)),)
@@ -30,20 +35,26 @@ LINUX_INCLUDES := \
 	-I$(KDIR)/include/uapi \
 	-I$(KDIR)/include \
 	-I$(KDIR)/arch/$(KERNEL_ARCH)/include/uapi
-
 LINUX_INCLUDES += -I$(KDIR)/arch/$(KERNEL_ARCH)/include/generated/uapi
 CFLAGS += $(LINUX_INCLUDES)
 endif
 
 .PHONY: all clean
 
-all: $(TARGET)
+all: $(TARGET) $(LIB_SO)
 
-$(TARGET): $(OBJS)
-	$(CC) $(LDFLAGS) -o $@ $^
+$(LIB_PIC): $(LIB_SRC)
+	$(CC) $(CFLAGS) -fPIC -c -o $@ $<
 
-%.o: %.c
+$(LIB_SO): $(LIB_PIC)
+	$(CC) -shared -Wl,-soname,$(SONAME) -o $@ $< $(LDFLAGS)
+
+$(MAIN_OBJ): $(MAIN_SRC)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
+# 与可执行同目录加载 .so（运行时需在含 librvd.so 的目录下执行，或设置 LD_LIBRARY_PATH）
+$(TARGET): $(MAIN_OBJ) $(LIB_SO)
+	$(CC) $(LDFLAGS) -o $@ $(MAIN_OBJ) -L. -lrvd -Wl,-rpath,'$$ORIGIN'
+
 clean:
-	rm -f $(TARGET) $(OBJS)
+	rm -f $(TARGET) $(MAIN_OBJ) $(LIB_PIC) $(LIB_SO)
